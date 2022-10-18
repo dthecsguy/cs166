@@ -31,7 +31,7 @@ create table Work_Dept(
 );
 
 create table Proj(
-  budget double,
+  budget float(24),
   start_date date,
   end_date date,
   sponsor text,
