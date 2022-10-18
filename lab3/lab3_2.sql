@@ -41,7 +41,7 @@ create table Album(
   title text,
   producer char(11),
   primary key (albumIdentifier),
-  foreign key (producer) references Musicican(ssn)
+  foreign key (producer) references Musician(ssn)
 );
 
 create table Song(
