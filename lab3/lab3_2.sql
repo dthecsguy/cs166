@@ -12,6 +12,12 @@ create table Place(
   primary key (address)
 );
 
+create table Musician(
+  ssn char(11) not null,
+  name text,
+  primary key (ssn)
+);
+
 create table Telephone(
   phone_no char(11) not null,
   home text not null,
@@ -21,26 +27,11 @@ create table Telephone(
   primary key (phone_no, home)
 );
 
-create table Musician(
-  ssn char(11) not null,
-  name text,
-  primary key (ssn)
-);
-
 create table Instrument(
   instrID char(50) not null,
   key char(1),
   dname text,
   primary key (instrID)
-);
-
-create table Song(
-  songID char(50)  not null,
-  title text,
-  suthor text,
-  appears char(50),
-  primary key (songID),
-  foreign key (appears) references Album(albumIdentifier)
 );
 
 create table Album(
@@ -51,6 +42,15 @@ create table Album(
   producer char(11),
   primary key (albumIdentifier),
   foreign key (producer) references Musicican(ssn)
+);
+
+create table Song(
+  songID char(50)  not null,
+  title text,
+  suthor text,
+  appears char(50),
+  primary key (songID),
+  foreign key (appears) references Album(albumIdentifier)
 );
 
 create table Perform(
