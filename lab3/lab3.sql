@@ -13,6 +13,7 @@ create table Prof(
 
 create table Dept(
   dno char(5) not null,
+  ssn char(11),
   dname text,
   office text,
   primary key(dno),
