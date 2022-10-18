@@ -8,14 +8,14 @@ create table Prof(
   age integer,
   rank text,
   specialty text,
-  primary key (ssn)
+  primary key(ssn)
 );
 
 create table Dept(
   dno char(5) not null,
   dname text,
   office text,
-  primary key (dno),
+  primary key(dno),
   foreign key (ssn) references Prof(ssn)
 );
 
@@ -23,7 +23,7 @@ create table Work_Dept(
   time_pc integer,
   ssn char(11) not null,
   dno char(5),
-  primary key (ssn, dno),
-  foreign key (ssn) references Prof(ssn),
-  foreign key (dno) references Dept(dno)
+  primary key(ssn, dno),
+  foreign key(ssn) references Prof(ssn),
+  foreign key(dno) references Dept(dno)
 );
