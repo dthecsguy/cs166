@@ -47,22 +47,24 @@ create table Proj(
 );
 
 create table Grad(
-  ssn char(11),
+  ssn char(11) not null,
   deg_pg text,
   name text,
   age integer,
-  primary key (ssn)
+  major text not null,
+  primary key (ssn),
+  foreign key (major) references Dept (dno)
 );
 
 create table GradS(
-  ssn char(11),
+  ssn char(11) not null,
   primary key (ssn),
   foreign key (ssn) references Grad(ssn)
 );
 
 create table GradG(
-  ssn char(11),
-  advise char(11),
+  ssn char(11) not null,
+  advise char(11) not null,
   primary key (ssn),
   foreign key (advise) references GradS(ssn),
   foreign key (ssn) references Grad(ssn)
