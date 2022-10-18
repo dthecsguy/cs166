@@ -1,6 +1,6 @@
-drop table Prof if exists cascade;
-drop table Dept if exists cascade;
-drop table Work_Dept if exists cascade;
+drop table if exists Prof cascade;
+drop table if exists Dept cascade;
+drop table if exists Work_Dept cascade;
 
 create table Prof(
   ssn char(11) not null,
