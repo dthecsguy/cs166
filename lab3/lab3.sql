@@ -1,6 +1,7 @@
 drop table if exists Prof cascade;
 drop table if exists Dept cascade;
 drop table if exists Work_Dept cascade;
+drop table if exists Proj cascade;
 
 create table Prof(
   ssn char(11) not null,
@@ -27,4 +28,17 @@ create table Work_Dept(
   primary key(ssn, dno),
   foreign key(ssn) references Prof(ssn),
   foreign key(dno) references Dept(dno)
+);
+
+create table Proj(
+  budget double,
+  start_date date,
+  end_date date,
+  sponsor text,
+  manage char(11) not null,
+  work_in char(11) not null,
+  pno char(5) not null,
+  primary key (pno), 
+  foreign key (manage) references Prof(ssn),
+  foreign key (work_in) references Prof(ssn)
 );
