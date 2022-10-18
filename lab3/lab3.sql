@@ -5,6 +5,7 @@ drop table if exists Proj cascade;
 drop table if exists Grad cascade;
 drop table if exists GradG cascade;
 drop table if exists GradS cascade;
+drop table if exists Work_Proj cascade;
 
 create table Prof(
   ssn char(11) not null,
@@ -70,4 +71,14 @@ create table GradG(
   foreign key (ssn) references Grad(ssn)
 );
 
+create table Work_Proj(
+  since date,
+  project char(5) not null,
+  graduate char(11) not null,
+  supervise char(11) not null,
+  primary key (project, graduate),
+  foreign key (project) references Proj(pno),
+  foreign key (graduate) references Grad(ssn),
+  foreign key (supervise) references Prof(ssn)
+);
 
