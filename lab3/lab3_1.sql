@@ -7,6 +7,15 @@ drop table if exists GradG cascade;
 drop table if exists GradS cascade;
 drop table if exists Work_Proj cascade;
 
+drop table if exists Place cascade;
+drop table if exists Telephone cascade;
+drop table if exists Musician cascade;
+drop table if exists Album cascade;
+drop table if exists Song cascade;
+drop table if exists Instrument cascade;
+drop table if exists Perform cascade;
+drop table if exists Plays cascade;
+
 create table Prof(
   ssn char(11) not null,
   name text,
