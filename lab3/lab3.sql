@@ -65,7 +65,7 @@ create table GradG(
   advise char(11),
   primary key (ssn),
   foreign key (advise) references GradS(ssn),
-  foreign key (ssn) references Graad(ssn)
+  foreign key (ssn) references Grad(ssn)
 );
 
 
