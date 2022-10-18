@@ -15,9 +15,7 @@ create table Telephone(
 );
 
 create table Home(
-  address text not null,
   phone_no char(11) not null,
-  primary key (address, phone_no),
-  foreign key (address) references Place(address),
+  primary key (phone_no),
   foreign key (phone_no) references Telephone(phone_no)
 );
