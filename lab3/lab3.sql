@@ -50,7 +50,7 @@ create table Grad(
   ssn char(11),
   deg_pg text,
   name text,
-  age integer
+  age integer,
   primary key (ssn)
 );
 
