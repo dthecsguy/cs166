@@ -1,4 +1,3 @@
-drop table if exists Home cascade;
 drop table if exists Place cascade;
 drop table if exists Telephone cascade;
 
@@ -12,10 +11,4 @@ create table Telephone(
   address text not null,
   foreign key (address) references Place(address),
   primary key (phone_no, address)
-);
-
-create table Home(
-  phone_no char(11) not null,
-  primary key (phone_no),
-  foreign key (phone_no) references Telephone(phone_no)
 );
