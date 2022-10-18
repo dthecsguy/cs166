@@ -2,6 +2,9 @@ drop table if exists Prof cascade;
 drop table if exists Dept cascade;
 drop table if exists Work_Dept cascade;
 drop table if exists Proj cascade;
+drop table if exists Grad cascade;
+drop table if exists GradG cascade;
+drop table if exists GradS cascade;
 
 create table Prof(
   ssn char(11) not null,
@@ -42,3 +45,27 @@ create table Proj(
   foreign key (manage) references Prof(ssn),
   foreign key (work_in) references Prof(ssn)
 );
+
+create table Grad(
+  ssn char(11),
+  deg_pg text,
+  name text,
+  age integer
+  primary key (ssn)
+);
+
+create table GradS(
+  ssn char(11),
+  primary key (ssn),
+  foreign key (ssn) references Grad(ssn)
+);
+
+create table GradG(
+  ssn char(11),
+  advise char(11),
+  primary key (ssn),
+  foreign key (advise) references GradS(ssn),
+  foreign key (ssn) references Graad(ssn)
+);
+
+
