@@ -88,7 +88,7 @@ create table TrafficController(
 create table Exam(
 	levell int not null,
 	duration int not null,
-	date date,
+	datee date,
 	primary key (levell)
 );
 
