@@ -23,7 +23,7 @@ create table Airplane(
 create table Model(
 	modelnumber int not null,
 	seatcapacity int,
-	weight double,
+	weight int,
 	fueltype char(11),
 	primary key (modelnumber)
 );
@@ -38,14 +38,14 @@ create table Assigned(
 
 create table Test(
 	faa char(50),
-	maximum double,
+	maximum int,
 	name char(50),
 	primary key (faa)
 );
 
 create table Track(
-	score double not null,
-	hours double not null,
+	score int not null,
+	hours int not null,
 	datee date not null,
 	faa char(50) not null,
 	tech char(11) not null,
@@ -69,7 +69,7 @@ create table Employee(
 
 create table Technician(
 	lastname char(50),
-	salary double,
+	salary int,
 	address char(100),
 	phonenumber char(11),
 	ssn char(11) not null,
