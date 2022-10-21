@@ -20,6 +20,11 @@ create table Model(
 	primary key (modelnumber)
 );
 
+create table Employee(
+	ssn char(11) not null,
+	primary key (ssn)
+);
+
 create table Airplane(
 	registration char(50) not null,
 	compname char(50),
@@ -70,11 +75,6 @@ create table Fix(
 	foreign key (modelnumber) references Model(modelnumber),
 	foreign key (tech) references Technician(ssn),
 	primary key (modelnumber, tech)  
-);
-
-create table Employee(
-	ssn char(11) not null,
-	primary key (ssn)
 );
 
 create table TrafficController(
