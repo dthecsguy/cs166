@@ -12,6 +12,14 @@ drop table if exists Partof cascade;
 drop table if exists Unionn cascade;
 drop table if exists Track cascade;
 
+create table Model(
+	modelnumber int not null,
+	seatcapacity int,
+	weight int,
+	fueltype char(11),
+	primary key (modelnumber)
+);
+
 create table Airplane(
 	registration char(50) not null,
 	compname char(50),
@@ -20,12 +28,11 @@ create table Airplane(
 	primary key (registration)
 );
 
-create table Model(
-	modelnumber int not null,
-	seatcapacity int,
-	weight int,
-	fueltype char(11),
-	primary key (modelnumber)
+create table Test(
+	faa char(50),
+	maximum int,
+	name char(50),
+	primary key (faa)
 );
 
 create table Assigned(
@@ -36,11 +43,14 @@ create table Assigned(
 	primary key (registration, test)
 );
 
-create table Test(
-	faa char(50),
-	maximum int,
-	name char(50),
-	primary key (faa)
+create table Technician(
+	lastname char(50),
+	salary int,
+	address char(100),
+	phonenumber char(11),
+	ssn char(11) not null,
+	foreign key (ssn) references Employee(ssn),
+	primary key (ssn)
 );
 
 create table Track(
@@ -67,22 +77,19 @@ create table Employee(
 	primary key (ssn)
 );
 
-create table Technician(
-	lastname char(50),
-	salary int,
-	address char(100),
-	phonenumber char(11),
-	ssn char(11) not null,
-	foreign key (ssn) references Employee(ssn),
-	primary key (ssn)
-);
-
 create table TrafficController(
 	age int,
 	experience int,
 	ssn char(11),
 	foreign key (ssn) references Employee(ssn),
 	primary key (ssn)
+);
+
+create table Exam(
+	levell int not null,
+	duration int not null,
+	date date,
+	primary key (levell)
 );
 
 create table Passed(
