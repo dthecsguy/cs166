@@ -22,7 +22,7 @@ inner join catalog
 on suppliers.sid = catalog.sid
 inner join parts
 on parts.pid = catalog.pid
-where parts.color = 'green';
+where parts.color = 'Green';
 
 select distinct suppliers.sname, parts.pname
 from suppliers
