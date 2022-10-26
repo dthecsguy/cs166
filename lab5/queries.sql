@@ -5,23 +5,24 @@ where cost < 10;
 select pname
 from parts
 inner join catalog
-on parts.pid = catalog.pid and catalog.cost < 10;
+on parts.pid = catalog.pid
+where catalog.cost < 10;
 
 select address
 from suppliers
-inner join parts
-on parts.pname in ('Fire Hydrant Cap')
 inner join catalog
-on suppliers.sid = catalog.sid;
+on suppliers.sid = catalog.sid
+where parts.pname = 'Fire Hydrant Cap';
 
 select sname
 from suppliers
 inner join catalog
 on suppliers.sid = catalog.sid
 inner join parts
-on parts.color in ('green');
+on parts.pid = catalog.pid
+where parts.color = 'green';
 
-select suppliers.sname, parts.pname
+select distinct suppliers.sname, parts.pname
 from suppliers
 inner join catalog
 on suppliers.sid = catalog.sid
