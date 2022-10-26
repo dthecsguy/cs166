@@ -9,16 +9,22 @@ on parts.pid = catalog.pid and catalog.cost < 10;
 
 select address
 from suppliers
-inner join parts, catalog
-on suppliers.sid = catalog.sid and parts.sname in ('Fire Hydrant Cap');
+inner join parts
+on parts.sname in ('Fire Hydrant Cap')
+inner join catalog
+on suppliers.sid = catalog.sid;
 
 select sname
 from suppliers
-inner join catalog, parts
-on suppliers.sid = catalog.sid and parts.color in ("green");
+inner join catalog
+on suppliers.sid = catalog.sid
+inner join parts
+on parts.color in ('green');
 
 select suppliers.sname, parts.pname
 from suppliers
-inner join catalog, parts
-on suppliers.sid = catalog.sid;
+inner join catalog
+on suppliers.sid = catalog.sid
+inner join parts
+on parts.pid = catalog.pid;
 
