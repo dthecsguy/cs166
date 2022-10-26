@@ -129,19 +129,19 @@ COPY suppliers (
 	sid,
 	sname,
 	address)
-FROM 'suppliers.txt'
+FROM '/home/csmajs/dsale010/cs166/lab5/suppliers.txt'
 WITH DELIMITER ';';
 
 COPY parts(
 	pid,
 	pname,
 	color)
-FROM 'parts.txt'
+FROM '/home/csmajs/dsale010/cs166/lab5/parts.txt'
 WITH DELIMITER ',';
 
 COPY catalog (
 	sid,
 	pid,
 	cost)
-FROM 'catalog.txt'
+FROM '/home/csmajs/dsale010/cs166/lab5/catalog.txt'
 WITH DELIMITER ',';
