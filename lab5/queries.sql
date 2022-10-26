@@ -9,9 +9,11 @@ on parts.pid = catalog.pid
 where catalog.cost < 10;
 
 select address
-from suppliers
+from supplies
 inner join catalog
 on suppliers.sid = catalog.sid
+inner join parts
+on parts.pid = catalog.pid
 where parts.pname = 'Fire Hydrant Cap';
 
 select sname
