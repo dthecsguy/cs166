@@ -10,7 +10,7 @@ on parts.pid = catalog.pid and catalog.cost < 10;
 select address
 from suppliers
 inner join parts
-on parts.sname in ('Fire Hydrant Cap')
+on parts.pname in ('Fire Hydrant Cap')
 inner join catalog
 on suppliers.sid = catalog.sid;
 
