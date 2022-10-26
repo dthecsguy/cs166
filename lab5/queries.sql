@@ -9,7 +9,7 @@ on parts.pid = catalog.pid
 where catalog.cost < 10;
 
 select address
-from supplies
+from suppliers
 inner join catalog
 on suppliers.sid = catalog.sid
 inner join parts
