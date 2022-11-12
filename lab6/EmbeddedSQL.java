@@ -251,7 +251,8 @@ public class EmbeddedSQL {
    public static void Query1(EmbeddedSQL esql){
       // Your code goes here.
 	  try{
-		String query = "SELECT sid, count(sid) AS count FROM catalog GROUP BY sid;"
+		String query = "SELECT sid, count(sid) AS count FROM catalog GROUP BY sid;";
+		int rowCount = esql.executeQuery(query);
 	  }catch(Exception e){
 		  System.err.println(e.getMessage());
 	  }
@@ -261,7 +262,8 @@ public class EmbeddedSQL {
    public static void Query2(EmbeddedSQL esql){
       // Your code goes here.
       try{
-		String query = "SELECT sid, count(sid) AS count FROM catalog GROUP BY sid HAVING count(sid) > 3;"
+		String query = "SELECT sid, count(sid) AS count FROM catalog GROUP BY sid HAVING count(sid) >= 3;";
+		int rowCount = esql.executeQuery(query);
 	  }catch(Exception e){
 		  System.err.println(e.getMessage());
 	  }
@@ -274,7 +276,8 @@ public class EmbeddedSQL {
 					 "inner join catalog on suppliers.sid = catalog.sid " +
 					 "inner join parts on parts.pid = catalog.pid " +
 					 "where parts.color = \'Green\' " + 
-					 "group by Suppliers.sname;"
+					 "group by Suppliers.sname;";
+	  int rowCount = esql.executeQuery(query);
 	  }
 	  catch(Exception e){
 		System.err.println(e.getMessage());
@@ -287,7 +290,10 @@ public class EmbeddedSQL {
         String query = "select suppliers.sname, MAX(parts.price) from suppliers " + 
 					   "inner join catalog on suppliers.sid = catalog.sid " + 
 					   "inner join parts on parts.pid = catalog.pid " + 
-					   "where parts.color = \'Green\' or parts.color = \'Red\'"
+					   "where parts.color in ('Red', 'Green') " + 
+					   "group by suppliers.sname";
+					   
+		int rowCount = esql.executeQuery(query);
 	  }
 	  catch(Exception e){
 		System.err.println(e.getMessage());
@@ -296,8 +302,12 @@ public class EmbeddedSQL {
 
    public static void Query5(EmbeddedSQL esql){
       // Your code goes here.
-      // ...
-      // ...
+	  System.out.print("\tEnter cost: $");
+      String input = in.readLine();
+	  
+	  String query = "select parts.pname from parts inner join catalog on catalog.pid = parts.pid where catalog.cost < " + input + " group by parts.pname;";
+	  int rowCount = esql.executeQuery(query);
+	  System.out.println ("total row(s): " + rowCount);
    }//end Query5
 
    public static void Query6(EmbeddedSQL esql){
