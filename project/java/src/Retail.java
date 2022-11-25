@@ -428,7 +428,21 @@ public class Retail {
 	}
    }
 	
-   public static void viewProducts(Retail esql) {}
+   public static void viewProducts(Retail esql) {
+   	try{
+		System.out.print("Enter your desired Store ID: ");
+		String storeID = in.readLine();
+		
+		String query = String.format("SELECT * FROM Product WHERE storeID = %s", storeID);
+		System.out.println("-------------------Results---------------------\n");
+		int re = esql.executeQueryAndPrintResult(query);
+	
+	}catch(Exception e){
+		System.err.println(e.getMessage());
+		return null;
+	}
+   }
+
    public static void placeOrder(Retail esql) {}
    public static void viewRecentOrders(Retail esql) {}
    public static void updateProduct(Retail esql) {}
