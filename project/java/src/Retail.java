@@ -39,6 +39,9 @@ public class Retail {
    // This variable can be global for convenience.
    static BufferedReader in = new BufferedReader(
                                 new InputStreamReader(System.in));
+	
+	private List<String> user = null;
+	private boolean s = false;
 
    /**
     * Creates a new instance of Retail shop
@@ -262,14 +265,13 @@ public class Retail {
             System.out.println("1. Create user");
             System.out.println("2. Log in");
             System.out.println("9. < EXIT");
-            String authorisedUser = null;
             switch (readChoice()){
                case 1: CreateUser(esql); break;
-               case 2: authorisedUser = LogIn(esql); break;
+               case 2: user = LogIn(esql); break;
                case 9: keepon = false; break;
                default : System.out.println("Unrecognized choice!"); break;
             }//end switch
-            if (authorisedUser != null) {
+            if (user != null) {
               boolean usermenu = true;
               while(usermenu) {
                 System.out.println("MAIN MENU");
@@ -367,7 +369,8 @@ public class Retail {
 			String query = String.format("INSERT INTO USERS (name, password, latitude, longitude, type) VALUES ('%s','%s', %s, %s,'%s')", name, password, latitude, longitude, type);
 
          esql.executeUpdate(query);
-         System.out.println ("User successfully created!");
+         System.out.println ("User successfully created!");		 
+		 
       }catch(Exception e){
          System.err.println (e.getMessage ());
       }
@@ -378,7 +381,7 @@ public class Retail {
     * Check log in credentials for an existing user
     * @return User login or null is the user does not exist
     **/
-   public static String LogIn(Retail esql){
+   public static String LogIn(Retail esql) throws SQLException { 
       try{
          System.out.print("\tEnter name: ");
          String name = in.readLine();
@@ -386,19 +389,43 @@ public class Retail {
          String password = in.readLine();
 
          String query = String.format("SELECT * FROM USERS WHERE name = '%s' AND password = '%s'", name, password);
-         int userNum = esql.executeQuery(query);
-	 if (userNum > 0)
-		return name;
+         List<List<String>> user = esql.executeQueryAndReturnResult(query);
+
+		 if (user.size() == 1){
+			return user[0];
+		 }
+		  
+		 System.out.println("User does not exist!!");
          return null;
       }catch(Exception e){
          System.err.println (e.getMessage ());
          return null;
       }
    }//end
-
-// Rest of the functions definition go in here
-
-   public static void viewStores(Retail esql) {}
+	
+   public static void viewStores(Retail esql) {
+	try{
+   	    System.out.print("\tFinding the closest stores to you...\n \n");
+		
+		int cnt = 0;
+		
+		String query = String.format("SELECT * FROM Store");
+		List<List<String>> re = esql.executeQueryAndReturnResult(query);
+		
+		System.out.println("-------------------Results---------------------\n");
+		
+		for(List<String> store : re){
+			if( esql.calculateDistance(user[3], user[4], store[2], store[3]) <= 30 ){
+				System.out.println("%d.) %s", ++cnt, store[1]);
+			}
+		}
+	 	   
+	}catch(Exception e){
+		System.err.println(e.getMessage());
+		return null;
+	}
+   }
+	
    public static void viewProducts(Retail esql) {}
    public static void placeOrder(Retail esql) {}
    public static void viewRecentOrders(Retail esql) {}
