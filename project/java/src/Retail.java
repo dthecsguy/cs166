@@ -40,7 +40,7 @@ public class Retail {
    static BufferedReader in = new BufferedReader(
                                 new InputStreamReader(System.in));
 	
-	private List<String> user = null;
+	private static List<String> authorisedUser = null;
 	private boolean s = false;
 
    /**
@@ -267,11 +267,11 @@ public class Retail {
             System.out.println("9. < EXIT");
             switch (readChoice()){
                case 1: CreateUser(esql); break;
-               case 2: user = LogIn(esql); break;
+               case 2: this.authorisedUser = LogIn(esql); break;
                case 9: keepon = false; break;
                default : System.out.println("Unrecognized choice!"); break;
             }//end switch
-            if (user != null) {
+            if (this.authorisedUser != null) {
               boolean usermenu = true;
               while(usermenu) {
                 System.out.println("MAIN MENU");
@@ -383,7 +383,7 @@ public class Retail {
     * Check log in credentials for an existing user
     * @return User login or null is the user does not exist
     **/
-   public static String LogIn(Retail esql) throws SQLException { 
+   public static List<String> LogIn(Retail esql) throws SQLException { 
       try{
          System.out.print("\tEnter name: ");
          String name = in.readLine();
@@ -393,8 +393,8 @@ public class Retail {
          String query = String.format("SELECT * FROM USERS WHERE name = '%s' AND password = '%s'", name, password);
          List<List<String>> user = esql.executeQueryAndReturnResult(query);
 
-		 if (user.size() == 1){
-			return user[0];
+		 if (user.size() > 0){
+			return user[1];
 		 }
 		  
 		 System.out.println("User does not exist!!");
@@ -417,7 +417,7 @@ public class Retail {
 		System.out.println("-------------------Results---------------------\n");
 		
 		for(List<String> store : re){
-			if( esql.calculateDistance(user[3], user[4], store[2], store[3]) <= 30 ){
+			if( esql.calculateDistance(Double.parseDouble(this.authorisedUser[3]), Double.parseDouble(this.authorisedUser[4]), Double.parseDouble(store[2]), Double.parseDouble(store[3])) <= 30 ){
 				System.out.println("%d.) %s", ++cnt, store[1]);
 			}
 		}
@@ -452,7 +452,7 @@ public class Retail {
    public static void placeProductSupplyRequests(Retail esql) {}
 	
    public static void userInfo(Retail esql) {
-   	System.out.println("User Info: %s, %s", user[1], user[5]);
+   	System.out.println("User Info: %s, %s", this.authorisedUser[1], this.authorisedUser[5]);
    }
 
 }//end Retail
