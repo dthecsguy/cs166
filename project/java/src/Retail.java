@@ -40,7 +40,7 @@ public class Retail {
    static BufferedReader in = new BufferedReader(
                                 new InputStreamReader(System.in));
 	
-	private static List<String> authorisedUser = null;
+	private List<String> authorisedUser = null;
 	private boolean s = false;
 
    /**
@@ -267,11 +267,11 @@ public class Retail {
             System.out.println("9. < EXIT");
             switch (readChoice()){
                case 1: CreateUser(esql); break;
-               case 2: this.authorisedUser = LogIn(esql); break;
+               case 2: authorisedUser = LogIn(esql); break;
                case 9: keepon = false; break;
                default : System.out.println("Unrecognized choice!"); break;
             }//end switch
-            if (this.authorisedUser != null) {
+            if (authorisedUser != null) {
               boolean usermenu = true;
               while(usermenu) {
                 System.out.println("MAIN MENU");
@@ -383,7 +383,7 @@ public class Retail {
     * Check log in credentials for an existing user
     * @return User login or null is the user does not exist
     **/
-   public static List<String> LogIn(Retail esql) throws SQLException { 
+   public List<String> LogIn(Retail esql) throws SQLException { 
       try{
          System.out.print("\tEnter name: ");
          String name = in.readLine();
@@ -394,7 +394,7 @@ public class Retail {
          List<List<String>> user = esql.executeQueryAndReturnResult(query);
 
 		 if (user.size() > 0){
-			return user[1];
+			return user.get(1);
 		 }
 		  
 		 System.out.println("User does not exist!!");
@@ -405,7 +405,7 @@ public class Retail {
       }
    }//end
 	
-   public static void viewStores(Retail esql) {
+   public void viewStores(Retail esql) {
 	try{
    	    System.out.print("\tFinding the closest stores to you...\n \n");
 		
@@ -417,18 +417,17 @@ public class Retail {
 		System.out.println("-------------------Results---------------------\n");
 		
 		for(List<String> store : re){
-			if( esql.calculateDistance(Double.parseDouble(this.authorisedUser[3]), Double.parseDouble(this.authorisedUser[4]), Double.parseDouble(store[2]), Double.parseDouble(store[3])) <= 30 ){
-				System.out.println("%d.) %s", ++cnt, store[1]);
+			if( esql.calculateDistance(Double.parseDouble(authorisedUser.get(3)), Double.parseDouble(authorisedUser.get(4)), Double.parseDouble(store.get(2)), Double.parseDouble(store.get(3))) <= 30 ){
+				System.out.println("%d.) %s", ++cnt, store.get(1));
 			}
 		}
 	 	   
 	}catch(Exception e){
 		System.err.println(e.getMessage());
-		return null;
 	}
    }
 	
-   public static void viewProducts(Retail esql) {
+   public void viewProducts(Retail esql) {
    	try{
 		System.out.print("Enter your desired Store ID: ");
 		String storeID = in.readLine();
@@ -439,7 +438,6 @@ public class Retail {
 	
 	}catch(Exception e){
 		System.err.println(e.getMessage());
-		return null;
 	}
    }
 
