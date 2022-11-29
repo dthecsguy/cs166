@@ -456,7 +456,7 @@ public static void placeOrder(Retail esql) {
 		int re = esql.executeQuery(query);
 		
 		if (re > 1){
-			String query = String.format("INSERT INTO Orders (customerID, storeID, productName, unitsOrdered) VALUES ('%s', '%s', '%s', '%s')", esql.authorisedUser.get(0), id, product, unitno);
+			query = String.format("INSERT INTO Orders (customerID, storeID, productName, unitsOrdered) VALUES ('%s', '%s', '%s', '%s')", esql.authorisedUser.get(0), id, product, unitno);
 			esql.executeUpdate(query);
 			
 			System.out.println("Order succefully processed!");
@@ -474,14 +474,14 @@ public static void viewRecentOrders(Retail esql) {
     try{
 		if (esql.authorisedUser.get(5) == "customer"){
 			String query = String.format("SELECT * FROM Orders WHERE customerID = %s LIMIT 5", esql.authorisedUser.get(0));
-			int re = esql.executeAndPrintResult(query);
+			int res = esql.executeAndPrintResult(query);
 		}
 		else if(esql.authorisedUser.get(5) == "manager"){
 			String query = String.format("SELECT * from orders where storeid in (select storeid from store where managerUserID = %s", esql.authorisedUser.get(0));
-			int re = esql.executeAndPrintResult(query);
+			int res = esql.executeAndPrintResult(query);
 		}
 		else{
-			int re = 0;
+			int res = 0;
 		}
 	}
 	catch(Exception e){
