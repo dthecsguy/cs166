@@ -368,7 +368,7 @@ public class Retail {
          
          String type="Customer";
 
-			String query = String.format("INSERT INTO USERS (name, password, latitude, longitude, type) VALUES ('%s','%s', %s, %s,'%s')", name, password, latitude, longitude, type);
+	String query = String.format("INSERT INTO USERS (name, password, latitude, longitude, type) VALUES ('%s','%s', %s, %s,'%s')", name, password, latitude, longitude, type);
 
          esql.executeUpdate(query);
          System.out.println ("User successfully created!");		 
