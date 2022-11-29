@@ -24,6 +24,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.ArrayList;
 import java.lang.Math;
+import java.sql.Timestamp;
 
 /**
  * This class defines a simple embedded SQL utility class that is designed to
@@ -458,7 +459,8 @@ public static void placeOrder(Retail esql) {
 		int re = esql.executeQuery(query);
 		
 		if (re > 1){
-			query = String.format("INSERT INTO Orders (customerID, storeID, productName, unitsOrdered) VALUES ('%s', '%s', '%s', '%s')", esql.authorisedUser.get(0), id, product, unitno);
+			Timestamp ts = new Timestamp(now);
+			query = String.format("INSERT INTO Orders (customerID, storeID, productName, unitsOrdered) VALUES ('%s', '%s', '%s', '%s', '%s')", esql.authorisedUser.get(0), id, product, unitno, ts.toString());
 			esql.executeUpdate(query);
 			
 			System.out.println("Order succefully processed!");
