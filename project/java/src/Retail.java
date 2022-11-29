@@ -418,7 +418,7 @@ public class Retail {
 		
 		for(List<String> store : re){
 			if( esql.calculateDistance(Double.parseDouble(esql.authorisedUser.get(3)), Double.parseDouble(esql.authorisedUser.get(4)), Double.parseDouble(store.get(2)), Double.parseDouble(store.get(3))) <= 30 ){
-				System.out.println("%d.) %s", ++cnt, store.get(1));
+				System.out.print("%d.) %s\n", ++cnt, store.get(1));
 			}
 		}
 	 	   
