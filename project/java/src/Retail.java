@@ -450,7 +450,7 @@ public class Retail {
    public static void placeProductSupplyRequests(Retail esql) {}
 	
    public static void userInfo(Retail esql) {
-   	System.out.printf("User Info: %s, %s", esql.authorisedUser[1], esql.authorisedUser[5]);
+   	System.out.printf("User Info: %s, %s", esql.authorisedUser.get(1), esql.authorisedUser.get(5));
    }
 
 }//end Retail
