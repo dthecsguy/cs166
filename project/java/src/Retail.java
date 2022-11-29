@@ -267,11 +267,11 @@ public class Retail {
             System.out.println("9. < EXIT");
             switch (readChoice()){
                case 1: CreateUser(esql); break;
-               case 2: this.authorisedUser = LogIn(esql); break;
+               case 2: esql.authorisedUser = LogIn(esql); break;
                case 9: keepon = false; break;
                default : System.out.println("Unrecognized choice!"); break;
             }//end switch
-            if (this.authorisedUser != null) {
+            if (esql.authorisedUser != null) {
               boolean usermenu = true;
               while(usermenu) {
                 System.out.println("MAIN MENU");
@@ -383,7 +383,7 @@ public class Retail {
     * Check log in credentials for an existing user
     * @return User login or null is the user does not exist
     **/
-   public List<String> LogIn(Retail esql) throws SQLException { 
+   public static List<String> LogIn(Retail esql) throws SQLException { 
       try{
          System.out.print("\tEnter name: ");
          String name = in.readLine();
@@ -405,7 +405,7 @@ public class Retail {
       }
    }//end
 	
-   public void viewStores(Retail esql) {
+   public static void viewStores(Retail esql) {
 	try{
    	    System.out.print("\tFinding the closest stores to you...\n \n");
 		
@@ -417,7 +417,7 @@ public class Retail {
 		System.out.println("-------------------Results---------------------\n");
 		
 		for(List<String> store : re){
-			if( esql.calculateDistance(Double.parseDouble(authorisedUser.get(3)), Double.parseDouble(authorisedUser.get(4)), Double.parseDouble(store.get(2)), Double.parseDouble(store.get(3))) <= 30 ){
+			if( esql.calculateDistance(Double.parseDouble(esql.authorisedUser.get(3)), Double.parseDouble(esql.authorisedUser.get(4)), Double.parseDouble(store.get(2)), Double.parseDouble(store.get(3))) <= 30 ){
 				System.out.println("%d.) %s", ++cnt, store.get(1));
 			}
 		}
@@ -427,7 +427,7 @@ public class Retail {
 	}
    }
 	
-   public void viewProducts(Retail esql) {
+   public static void viewProducts(Retail esql) {
    	try{
 		System.out.print("Enter your desired Store ID: ");
 		String storeID = in.readLine();
@@ -450,7 +450,7 @@ public class Retail {
    public static void placeProductSupplyRequests(Retail esql) {}
 	
    public static void userInfo(Retail esql) {
-   	System.out.println("User Info: %s, %s", this.authorisedUser[1], this.authorisedUser[5]);
+   	System.out.println("User Info: %s, %s", esql.authorisedUser[1], esql.authorisedUser[5]);
    }
 
 }//end Retail
