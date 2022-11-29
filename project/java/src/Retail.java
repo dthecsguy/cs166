@@ -474,11 +474,11 @@ public static void viewRecentOrders(Retail esql) {
     try{
 		if (esql.authorisedUser.get(5) == "customer"){
 			String query = String.format("SELECT * FROM Orders WHERE customerID = %s LIMIT 5", esql.authorisedUser.get(0));
-			int res = esql.executeAndPrintResult(query);
+			int res = esql.executeQueryAndPrintResult(query);
 		}
 		else if(esql.authorisedUser.get(5) == "manager"){
 			String query = String.format("SELECT * from orders where storeid in (select storeid from store where managerUserID = %s", esql.authorisedUser.get(0));
-			int res = esql.executeAndPrintResult(query);
+			int res = esql.executeQueryAndPrintResult(query);
 		}
 		else{
 			int res = 0;
