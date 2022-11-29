@@ -405,7 +405,7 @@ public class Retail {
       }
    }//end
 	
-   public static void viewStores(Retail esql) {
+  public static void viewStores(Retail esql) {
 	try{
    	    System.out.print("\tFinding the closest stores to you...\n \n");
 		
@@ -441,8 +441,53 @@ public class Retail {
 	}
    }
 
-   public static void placeOrder(Retail esql) {}
-   public static void viewRecentOrders(Retail esql) {}
+public static void placeOrder(Retail esql) {
+	try{
+		System.out.print("Enter the desired Store ID: ");
+		String id = in.readLine();
+		
+		System.out.print("Enter the product name exactly: ");
+		String product = in.readLine();
+		
+		System.out.print("Enter the number of units desired: ");
+		String unitno = in.readLine();
+		
+		String query = String.format("SELECT * FROM Product WHERE storeID = %s and numberOfUnits >= %d", id, Integer.parseInt(unitno));
+		int re = esql.executeQuery(query);
+		
+		if (re > 1){
+			String query = String.format("INSERT INTO Orders (customerID, storeID, productName, unitsOrdered) VALUES ('%s', '%s', '%s', '%s')", esql.authorisedUser.get(0), id, product, unitno);
+			esql.executeUpdate(query);
+			
+			System.out.println("Order succefully processed!");
+		}
+		else{
+			System.out.println("Order Invalid!");
+		}
+	}
+	catch(Exception e){
+		System.err.println(e.getMessage());
+	}
+}
+
+public static void viewRecentOrders(Retail esql) {
+    try{
+		if (esql.authorisedUser.get(5) == "customer"){
+			String query = String.format("SELECT * FROM Orders WHERE customerID = %s LIMIT 5", esql.authorisedUser.get(0));
+			int re = esql.executeAndPrintResult(query);
+		}
+		else if(esql.authorisedUser.get(5) == "manager"){
+			String query = String.format("SELECT * from orders where storeid in (select storeid from store where managerUserID = %s", esql.authorisedUser.get(0));
+			int re = esql.executeAndPrintResult(query);
+		}
+		else{
+			int re = 0;
+		}
+	}
+	catch(Exception e){
+		System.err.println(e.getMessage());
+	}
+}
    public static void updateProduct(Retail esql) {}
    public static void viewRecentUpdates(Retail esql) {}
    public static void viewPopularProducts(Retail esql) {}
