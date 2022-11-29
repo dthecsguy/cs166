@@ -456,12 +456,14 @@ public static void placeOrder(Retail esql) {
 		String unitno = in.readLine();
 		
 		String query = String.format("SELECT * FROM Product WHERE storeID = %s and numberOfUnits >= %d", id, Integer.parseInt(unitno));
-		int re = esql.executeQuery(query);
+		List<List<String>> re = esql.executeQueryAndReturnResult(query);
 		
-		if (re > 1){
+		if (re.size() > 1){
 			Timestamp ts = new Timestamp(now);
 			query = String.format("INSERT INTO Orders (customerID, storeID, productName, unitsOrdered) VALUES ('%s', '%s', '%s', '%s', '%s')", esql.authorisedUser.get(0), id, product, unitno, ts.toString());
 			esql.executeUpdate(query);
+			
+			query = String.format("update product set numberOfUnits = %d where productName = %s and storeid = %s", re.get(1).get(2) - unitno, product, id);
 			
 			System.out.println("Order succefully processed!");
 		}
