@@ -40,8 +40,8 @@ public class Retail {
    static BufferedReader in = new BufferedReader(
                                 new InputStreamReader(System.in));
 	
+	//THE USER VARIABLE***********************************************************
 	private List<String> authorisedUser = null;
-	private boolean s = false;
 
    /**
     * Creates a new instance of Retail shop
@@ -301,7 +301,8 @@ public class Retail {
                    case 7: viewPopularProducts(esql); break;
                    case 8: viewPopularCustomers(esql); break;
                    case 9: placeProductSupplyRequests(esql); break;
-		   case 10: userInfo(esql); break;
+					//CUSTOM FUNCTION TO CHECK YOUR USER ****************************************
+		   		   case 10: userInfo(esql); break;
 
                    case 20: usermenu = false; break;
                    default : System.out.println("Unrecognized choice!"); break;
@@ -433,7 +434,6 @@ public class Retail {
 		String storeID = in.readLine();
 		
 		String query = String.format("SELECT * FROM Product WHERE storeID = %s", storeID);
-		System.out.println("-------------------Results---------------------\n");
 		int re = esql.executeQueryAndPrintResult(query);
 	
 	}catch(Exception e){
