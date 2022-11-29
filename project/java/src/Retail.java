@@ -268,7 +268,9 @@ public class Retail {
             switch (readChoice()){
                case 1: CreateUser(esql); break;
                case 2: esql.authorisedUser = LogIn(esql); break;
-               case 9: keepon = false; break;
+               case 9: keepon = false;
+		esql.authorisedUser = null;
+		break;
                default : System.out.println("Unrecognized choice!"); break;
             }//end switch
             if (esql.authorisedUser != null) {
@@ -419,7 +421,7 @@ public class Retail {
 		
 		for(List<String> store : re){
 			if( esql.calculateDistance(Double.parseDouble(esql.authorisedUser.get(3)), Double.parseDouble(esql.authorisedUser.get(4)), Double.parseDouble(store.get(2)), Double.parseDouble(store.get(3))) <= 30 ){
-				System.out.printf("%d.) %s\n", ++cnt, store.get(1));
+				System.out.println("Store ID: " + store.get(0) + " Store Name: " + store.get(1));
 			}
 		}
 	 	   
