@@ -494,15 +494,33 @@ public static void viewRecentOrders(Retail esql) {
 		System.err.println(e.getMessage());
 	}
 }
+	
    public static void updateProduct(Retail esql) {}
    public static void viewRecentUpdates(Retail esql) {}
    public static void viewPopularProducts(Retail esql) {}
-   public static void viewPopularCustomers(Retail esql) {}
-   public static void placeProductSupplyRequests(Retail esql) {}
 	
-   public static void userInfo(Retail esql) {
+public static void viewPopularCustomers(Retail esql) {
+	try{
+		if (user.get(5) == "manager"){
+			String query = String.format("select users.userID, users.name, count(orders.orderNumber) as numOrders from users" + 
+										" inner join orders on users.userID = orders.customerID" +
+										" group by users.userID order by numOrders desc limit 5");
+			int re = esql.executeQueryAndPrintResult(query);
+		}
+		else{
+			System.out.println("Permission Denied!!!");
+		}
+	}
+	catch(Exception e){
+		System.err.println(e.getMessage());
+	}
+}
+	
+public static void placeProductSupplyRequests(Retail esql) {}
+	
+public static void userInfo(Retail esql) {
    	System.out.printf("User Info: %s, %s", esql.authorisedUser.get(1), esql.authorisedUser.get(5));
-   }
+}
 
 }//end Retail
 
