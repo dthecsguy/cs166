@@ -402,9 +402,8 @@ public class Retail {
 		 if (user.size() > 0){
 			 
 			 System.out.println(user.get(0).get(5) + "x");
-			 user.get(0).get(5) = user.get(0).get(5).replaceAll("\\s", "");
 			 
-			if (user.get(0).get(5) == "manager"){
+			if (user.get(0).get(5).replaceAll("\\s", "") == "manager"){
 				
 				query = String.format("select storeID from store where storeid in (select storeid from store where managerUserID = %s)", user.get(0).get(0));	
 				List<List<String>> res = esql.executeQueryAndReturnResult(query);
