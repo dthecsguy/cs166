@@ -411,11 +411,10 @@ public class Retail {
 				esql.mStores = new ArrayList<String>();
 				
 				for(List<String> x : res){
-					System.out.println(x.get(0));
 					esql.mStores.add(x.get(0));
 				}
 				
-				System.out.printf("Your Stores: %s", esql.mStores.get(1));
+				System.out.printf("Your Stores: %s\n", esql.mStores.get(1));
 			}
 			return user.get(0);
 		 }
@@ -497,11 +496,11 @@ public static void placeOrder(Retail esql) {
 
 public static void viewRecentOrders(Retail esql) {
     try{
-		if (esql.authorisedUser.get(5) == "customer"){
+		if (!(esql.authorisedUser.get(5).replaceAll("\\s", "") == "customer")){
 			String query = String.format("SELECT * FROM Orders WHERE customerID = %s LIMIT 5", esql.authorisedUser.get(0));
 			int res = esql.executeQueryAndPrintResult(query);
 		}
-		else if(esql.authorisedUser.get(5) == "manager"){
+		else if(!(esql.authorisedUser.get(5).replaceAll("\\s", "") == "manager")){
 			String query = String.format("SELECT * from orders where storeid in (select storeid from store where managerUserID = %s)", esql.authorisedUser.get(0));
 			int res = esql.executeQueryAndPrintResult(query);
 		}
@@ -516,7 +515,7 @@ public static void viewRecentOrders(Retail esql) {
 	
 public static void updateProduct(Retail esql) {
 	try{
-		if (esql.authorisedUser.get(5) == "manager"){
+		if (!(esql.authorisedUser.get(5) == "manager")){
 			System.out.print("Enter the desired Store ID: ");
 			String id = in.readLine();
 			
@@ -576,7 +575,7 @@ public static void updateProduct(Retail esql) {
 	
 public static void viewPopularProducts(Retail esql) {
    try{
-	if (esql.authorisedUser.get(5) == "manager"){
+	if (!(esql.authorisedUser.get(5) == "manager")){
 		String query = String.format("select product.productName, product.storeID, count(orders.orderNumber) as numOrders from product" + 
 						" inner join orders on product.productName = orders.productName" +
 					    	" having product.storeID in (select storeid from store where managerUserID = %s)" +
@@ -594,7 +593,7 @@ public static void viewPopularProducts(Retail esql) {
 	
 public static void viewPopularCustomers(Retail esql) {
 	try{
-		if (esql.authorisedUser.get(5) == "manager"){
+		if (!(esql.authorisedUser.get(5) == "manager")){
 			String query = String.format("select users.userID, users.name, count(orders.orderNumber) as numOrders from users" + 
 										" inner join orders on users.userID = orders.customerID" + 
 						    				" having product.storeID in (select storeid from store where managerUserID = %s)" +
