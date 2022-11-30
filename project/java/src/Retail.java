@@ -403,7 +403,7 @@ public class Retail {
 			 
 			 System.out.println(user.get(0).get(5).replaceAll("\\s", "") + "x");
 			 
-			if (user.get(0).get(5).replaceAll("\\s", "") == "manager"){
+			if (!(user.get(0).get(5).replaceAll("\\s", "") == "manager")){
 				
 				System.out.println("you are a manager!!");
 				
