@@ -414,7 +414,7 @@ public class Retail {
 					esql.mStores.add(x.get(0));
 				}
 				
-				System.out.printf("Your Stores: %s", esql.mStores.get(0));
+				System.out.printf("Your Stores: %s", esql.mStores.get(1));
 			}
 			return user.get(0);
 		 }
