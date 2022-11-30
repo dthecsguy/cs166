@@ -611,7 +611,7 @@ public static void viewPopularCustomers(Retail esql) {
 public static void placeProductSupplyRequests(Retail esql) {}
 	
 public static void userInfo(Retail esql) {
-   	System.out.printf("User Info: %s, %s", esql.authorisedUser.get(1), esql.authorisedUser.get(5));
+   	System.out.printf("User Info: %s, %s\n", esql.authorisedUser.get(1), esql.authorisedUser.get(5));
 }
 
 }//end Retail
