@@ -23,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Date;
 import java.lang.Math;
 import java.sql.Timestamp;
 
@@ -401,12 +402,12 @@ public class Retail {
 		 if (user.size() > 0){
 			if (user.get(1).get(5) == "manager"){
 				query = String.format("select storeID from store where storeid in (select storeid from store where managerUserID = %s)", user.get(1).get(0));	
-				List<List<String>> res = esql.executeAndReturnResult(query);
+				List<List<String>> res = esql.executeQueryAndReturnResult(query);
 				
-				mStores = new ArrayList<String>();
+				esql.mStores = new ArrayList<String>();
 				
 				for(List<String> x : res){
-					mStores.add(x.get(0));
+					esql.mStores.add(x.get(0));
 				}
 			}
 			return user.get(1);
