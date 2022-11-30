@@ -471,7 +471,7 @@ public static void placeOrder(Retail esql) {
 		List<List<String>> re = esql.executeQueryAndReturnResult(query);
 		
 		if (re.size() > 1){
-			Timestamp ts = new Timestamp(now);
+			Timestamp ts = new Timestamp(System..currentTimeMillis());
 			query = String.format("INSERT INTO Orders (customerID, storeID, productName, unitsOrdered) VALUES ('%s', '%s', '%s', '%s', '%s')", esql.authorisedUser.get(0), id, product, unitno, ts.toString());
 			esql.executeUpdate(query);
 			
