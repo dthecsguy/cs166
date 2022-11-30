@@ -475,7 +475,7 @@ public static void placeOrder(Retail esql) {
 			query = String.format("INSERT INTO Orders (customerID, storeID, productName, unitsOrdered) VALUES ('%s', '%s', '%s', '%s', '%s')", esql.authorisedUser.get(0), id, product, unitno, ts.toString());
 			esql.executeUpdate(query);
 			
-			query = String.format("update product set numberOfUnits = %d where productName = %s and storeid = %s", re.get(1).get(2) - unitno, product, id);
+			query = String.format("update product set numberOfUnits = %d where productName = %s and storeid = %s", Integer.parseInt(re.get(1).get(2)) - Integer.parseInt(unitno), product, id);
 			
 			System.out.println("Order succefully processed!");
 		}
@@ -513,14 +513,14 @@ public static void updateProduct(Retail esql) {
 			System.out.print("Enter the desired Store ID: ");
 			String id = in.readLine();
 			
-			if (mStores.contains(id)){
+			if (esql.mStores.contains(id)){
 				System.out.print("Enter the product you desire exactly: ");
 				String product = in.readLine();
 				
 				String query = String.format("select productName from product where storeID = %s", id);
-				int res = executeQuery(query);
+				int res = esql.executeQuery(query);
 				
-				if(res.size() > 1){
+				if(res > 1){
 					System.out.print("What would you like to change?\n" + 
 									"1.) Price\n2.) Inventory\n");
 									
@@ -528,8 +528,8 @@ public static void updateProduct(Retail esql) {
 						case 1: System.out.print("Enter new price: ");
 								String price = in.readLine();
 								
-								String query = String.format("update product set pricePerUnit = %s where storeid = %s and productName = %s", price, id, product);
-								int res = executeUpdate(query);
+								query = String.format("update product set pricePerUnit = %s where storeid = %s and productName = %s", price, id, product);
+								res = executeUpdate(query);
 								
 								System.out.println("Price changed successfully!!");
 								break;
@@ -537,8 +537,8 @@ public static void updateProduct(Retail esql) {
 						case 2: System.out.print("Enter new number of units: ");
 								String units = in.readLine();
 								
-								String query = String.format("update product set numberOfUnits = %s where storeid = %s and productName = %s", units, id, product);
-								int res = executeUpdate(query);
+								query = String.format("update product set numberOfUnits = %s where storeid = %s and productName = %s", units, id, product);
+								res = executeUpdate(query);
 								
 								System.out.println("Inventory changed successfully!!");
 								break;
@@ -573,7 +573,7 @@ public static void viewPopularProducts(Retail esql) {
 		String query = String.format("select product.productName, product.storeID, count(orders.orderNumber) as numOrders from product" + 
 						" inner join orders on product.productName = orders.productName" +
 						" group by users.userID order by numOrders desc limit 5" + 
-					    	" having product.storeID in (select storeid from store where managerUserID = %s)", esql.authorizedUser.get(0));
+					    	" having product.storeID in (select storeid from store where managerUserID = %s)", esql.authorisedUser.get(0));
 		int re = esql.executeQueryAndPrintResult(query);
 	}
 	else{
@@ -591,7 +591,7 @@ public static void viewPopularCustomers(Retail esql) {
 			String query = String.format("select users.userID, users.name, count(orders.orderNumber) as numOrders from users" + 
 										" inner join orders on users.userID = orders.customerID" +
 										" group by users.userID order by numOrders desc limit 5" + 
-						    				" having product.storeID in (select storeid from store where managerUserID = %s)", esql.authorizedUser.get(0));
+						    				" having product.storeID in (select storeid from store where managerUserID = %s)", esql.authorisedUser.get(0));
 			int re = esql.executeQueryAndPrintResult(query);
 		}
 		else{
