@@ -270,7 +270,7 @@ public class Retail {
             System.out.println("9. < EXIT");
             switch (readChoice()){
                case 1: CreateUser(esql); break;
-               case 2: esql.authorisedUser = LogIn(esql); break;
+               case 2: esql.authorisedUser = LogIn(esql); System.out.println(esql.authorisedUser.get(0)); break;
                case 9: keepon = false; 
 		esql.authorisedUser = null;
 		break;
