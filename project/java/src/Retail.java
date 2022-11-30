@@ -572,8 +572,8 @@ public static void viewPopularProducts(Retail esql) {
 	if (esql.authorisedUser.get(5) == "manager"){
 		String query = String.format("select product.productName, product.storeID, count(orders.orderNumber) as numOrders from product" + 
 						" inner join orders on product.productName = orders.productName" +
-						" group by users.userID order by numOrders desc limit 5" + 
-					    	" having product.storeID in (select storeid from store where managerUserID = %s)", esql.authorisedUser.get(0));
+					    	" having product.storeID in (select storeid from store where managerUserID = %s)" +
+						" group by product.productName, product.storeID, numOrders order by numOrders desc limit 5"), esql.authorisedUser.get(0));
 		int re = esql.executeQueryAndPrintResult(query);
 	}
 	else{
@@ -589,9 +589,9 @@ public static void viewPopularCustomers(Retail esql) {
 	try{
 		if (esql.authorisedUser.get(5) == "manager"){
 			String query = String.format("select users.userID, users.name, count(orders.orderNumber) as numOrders from users" + 
-										" inner join orders on users.userID = orders.customerID" +
-										" group by users.userID order by numOrders desc limit 5" + 
-						    				" having product.storeID in (select storeid from store where managerUserID = %s)", esql.authorisedUser.get(0));
+										" inner join orders on users.userID = orders.customerID" + 
+						    				" having product.storeID in (select storeid from store where managerUserID = %s)" +
+										" group by users.name, users.userID, numOrders order by numOrders desc limit 5", esql.authorisedUser.get(0));
 			int re = esql.executeQueryAndPrintResult(query);
 		}
 		else{
