@@ -411,6 +411,7 @@ public class Retail {
 				esql.mStores = new ArrayList<String>();
 				
 				for(List<String> x : res){
+					System.out.println(x.get(0));
 					esql.mStores.add(x.get(0));
 				}
 				
