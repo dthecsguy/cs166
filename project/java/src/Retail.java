@@ -573,7 +573,7 @@ public static void viewPopularProducts(Retail esql) {
 		String query = String.format("select product.productName, product.storeID, count(orders.orderNumber) as numOrders from product" + 
 						" inner join orders on product.productName = orders.productName" +
 					    	" having product.storeID in (select storeid from store where managerUserID = %s)" +
-						" group by product.productName, product.storeID, numOrders order by numOrders desc limit 5"), esql.authorisedUser.get(0));
+						" group by product.productName, product.storeID, numOrders order by numOrders desc limit 5", esql.authorisedUser.get(0));
 		int re = esql.executeQueryAndPrintResult(query);
 	}
 	else{
