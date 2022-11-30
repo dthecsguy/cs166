@@ -401,8 +401,6 @@ public class Retail {
 
 		 if (user.size() > 0){
 			 
-			 System.out.println(user.get(0).get(5).replaceAll("\\s", "") + "x");
-			 
 			if (!(user.get(0).get(5).replaceAll("\\s", "") == "manager")){
 				
 				System.out.println("you are a manager!!");
@@ -415,6 +413,8 @@ public class Retail {
 				for(List<String> x : res){
 					esql.mStores.add(x.get(0));
 				}
+				
+				System.out.printf("Your Stores: %s", esql.mStores.get(0));
 			}
 			return user.get(0);
 		 }
