@@ -402,6 +402,7 @@ public class Retail {
 		 if (user.size() > 0){
 			 
 			 System.out.println(user.get(0).get(5) + "x");
+			 user.get(0).get(5) = user.get(0).get(5).replaceAll("\\s", "");
 			 
 			if (user.get(0).get(5) == "manager"){
 				
