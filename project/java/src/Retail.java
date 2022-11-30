@@ -410,7 +410,7 @@ public class Retail {
 				for(List<String> x : res){
 					esql.mStores.add(x.get(0));
 				}
-			}*/
+			}
 			return user.get(0);
 		 }
 		  
