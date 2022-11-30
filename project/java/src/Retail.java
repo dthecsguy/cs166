@@ -413,8 +413,7 @@ public class Retail {
 				for(List<String> x : res){
 					esql.mStores.add(x.get(0));
 				}
-				
-				System.out.printf("Your Stores: %s\n", esql.mStores.get(1));
+
 			}
 			return user.get(0);
 		 }
