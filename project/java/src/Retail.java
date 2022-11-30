@@ -400,6 +400,7 @@ public class Retail {
          List<List<String>> user = esql.executeQueryAndReturnResult(query);
 
 		 if (user.size() > 0){
+			 System.out.println("inside if");
 			/*if (user.get(1).get(5) == "manager"){
 				query = String.format("select storeID from store where storeid in (select storeid from store where managerUserID = %s)", user.get(1).get(0));	
 				List<List<String>> res = esql.executeQueryAndReturnResult(query);
