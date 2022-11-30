@@ -400,8 +400,6 @@ public class Retail {
          List<List<String>> user = esql.executeQueryAndReturnResult(query);
 
 		 if (user.size() > 0){
-			 System.out.println("inside if");
-			 System.out.println(user.get(0).get(0));
 			/*if (user.get(1).get(5) == "manager"){
 				query = String.format("select storeID from store where storeid in (select storeid from store where managerUserID = %s)", user.get(1).get(0));	
 				List<List<String>> res = esql.executeQueryAndReturnResult(query);
@@ -412,7 +410,7 @@ public class Retail {
 					esql.mStores.add(x.get(0));
 				}
 			}*/
-			return user.get(1);
+			return user.get(0);
 		 }
 		  
 		 System.out.println("User does not exist!!");
