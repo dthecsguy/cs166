@@ -474,7 +474,8 @@ public static void placeOrder(Retail esql) {
 			query = String.format("INSERT INTO Orders (customerID, storeID, productName, unitsOrdered) VALUES ('%s', '%s', '%s', '%s', '%s')", esql.authorisedUser.get(0), id, product, unitno, ts.toString());
 			esql.executeUpdate(query);
 			
-			query = String.format("update product set numberOfUnits = %d where productName = %s and storeid = %s", re.get(1).get(2) - unitno, product, id);
+			int up = Integer.parseInt(re.get(1).get(2)) - Integer.parseInt(unitno);
+			query = String.format("update product set numberOfUnits = %d where productName = %s and storeid = %s", up, product, id);
 			
 			System.out.println("Order succefully processed!");
 		}
@@ -517,9 +518,9 @@ public static void updateProduct(Retail esql) {
 				String product = in.readLine();
 				
 				String query = String.format("select productName from product where storeID = %s", id);
-				int res = executeQuery(query);
+				int res = executeQuery(query);//not so sure what ur doing here product name is a string 
 				
-				if(res.size() > 1){
+				if(res.size() > 1){// This too
 					System.out.print("What would you like to change?\n" + 
 									"1.) Price\n2.) Inventory\n");
 									
@@ -527,8 +528,8 @@ public static void updateProduct(Retail esql) {
 						case 1: System.out.print("Enter new price: ");
 								String price = in.readLine();
 								
-								String query = String.format("update product set pricePerUnit = %s where storeid = %s and productName = %s", price, id, product);
-								int res = executeUpdate(query);
+								query = String.format("update product set pricePerUnit = %s where storeid = %s and productName = %s", price, id, product);
+								executeUpdate(query);
 								
 								System.out.println("Price changed successfully!!");
 								break;
@@ -536,8 +537,8 @@ public static void updateProduct(Retail esql) {
 						case 2: System.out.print("Enter new number of units: ");
 								String units = in.readLine();
 								
-								String query = String.format("update product set numberOfUnits = %s where storeid = %s and productName = %s", units, id, product);
-								int res = executeUpdate(query);
+								query = String.format("update product set numberOfUnits = %s where storeid = %s and productName = %s", units, id, product);
+								executeUpdate(query);
 								
 								System.out.println("Inventory changed successfully!!");
 								break;
