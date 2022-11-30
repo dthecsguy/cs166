@@ -529,7 +529,7 @@ public static void updateProduct(Retail esql) {
 								String price = in.readLine();
 								
 								query = String.format("update product set pricePerUnit = %s where storeid = %s and productName = %s", price, id, product);
-								res = executeUpdate(query);
+								esql.executeUpdate(query);
 								
 								System.out.println("Price changed successfully!!");
 								break;
@@ -538,7 +538,7 @@ public static void updateProduct(Retail esql) {
 								String units = in.readLine();
 								
 								query = String.format("update product set numberOfUnits = %s where storeid = %s and productName = %s", units, id, product);
-								res = executeUpdate(query);
+								esql.executeUpdate(query);
 								
 								System.out.println("Inventory changed successfully!!");
 								break;
