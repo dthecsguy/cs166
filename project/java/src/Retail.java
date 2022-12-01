@@ -596,7 +596,7 @@ public static void viewPopularCustomers(Retail esql) {
 		if (!(esql.authorisedUser.get(5) == "manager")){
 			String query = String.format("select users.userID, users.name, count(orders.orderNumber) as numOrders from users" + 
 										" inner join orders on users.userID = orders.customerID" + 
-						    				" having product.storeID in (select storeid from store where managerUserID = %s)" +
+						    				" having product.storeID in (select store.storeid from store where store.managerID = %s)" +
 										" group by users.name, users.userID, numOrders order by numOrders desc limit 5", esql.authorisedUser.get(0));
 			int re = esql.executeQueryAndPrintResult(query);
 		}
