@@ -497,7 +497,7 @@ public static void placeOrder(Retail esql) {
 public static void viewRecentOrders(Retail esql) {
     try{
 		if (!(esql.authorisedUser.get(5).replaceAll("\\s", "") == "customer")){
-			String query = String.format("SELECT * from orders where storeid in (select storeid from store where managerUserID = %s)", esql.authorisedUser.get(0));
+			String query = String.format("SELECT orderNumber, orderTime FROM Orders WHERE customerID = %s order by orderNumber desc limit 5", esql.authorisedUser.get(0));
 			int res = esql.executeQueryAndPrintResult(query);
 		}
 		else if(!(esql.authorisedUser.get(5).replaceAll("\\s", "") == "manager")){
