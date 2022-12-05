@@ -483,6 +483,10 @@ public static void placeOrder(Retail esql) {
 			
 			query = String.format("update product set numberOfUnits = %d where productName = %s and storeid = %s", Integer.parseInt(re.get(0).get(2)) - Integer.parseInt(unitno), product, id);
 			
+			String insert = String.format("insert into ProductUpdates (managerID, storeID, productName, updatedOn) " + 
+																	"values (%s, %s, %s, %s)", esql.authorisedUser.get(0).trim(), id, product, ts.toString());
+			executeUpdate(insert);
+			
 			System.out.println("Order succefully processed!");
 		}
 		else{
@@ -529,8 +533,10 @@ public static void updateProduct(Retail esql) {
 				if(res > 1){
 					System.out.print("What would you like to change?\n" + 
 									"1.) Price\n2.) Inventory\n");
-									
-					switch(readChoice()){
+					
+					Timestamp ts = new Timestamp(System.currentTimeMillis()); 
+					
+					switch(readChoice()){	
 						case 1: System.out.print("Enter new price: ");
 								String price = in.readLine();
 								
@@ -553,6 +559,10 @@ public static void updateProduct(Retail esql) {
 								System.out.println("Option Invalid!!");
 								break;
 					}
+					
+					String insert = String.format("insert into ProductUpdates (managerID, storeID, productName, updatedOn) " + 
+																	"values (%s, %s, %s, %s)", esql.authorisedUser.get(0).trim(), id, product, ts.toString());
+					executeUpdate(insert);
 				}
 				else{
 					System.out.print("Product not available at this store!!");
@@ -571,7 +581,21 @@ public static void updateProduct(Retail esql) {
 		System.err.println(e.getMessage());
 	}
 }
-   public static void viewRecentUpdates(Retail esql) {}
+
+public static void viewRecentUpdates(Retail esql) {
+   try{
+	if (esql.authorisedUser.get(5).trim().equals("manager")){
+		String query = String.format("SELECT * FROM productupdates order by updateNumber desc limit 5");
+		int res = esql.executeQueryAndPrintResult(query);
+	}
+	else{
+		System.out.println("Permission Denied!!");	
+	}
+   }
+   catch(Exception e){
+	System.err.println(e.getMessage());
+   }
+}
 	
 public static void viewPopularProducts(Retail esql) {
    try{
@@ -646,7 +670,7 @@ public static void placeProductSupplyRequests(Retail esql) {
 						query = String.format("select numberOfUnits from product where productName = %s and storeid = %s", product, storeid);
 						List<List<String>> num = esql.executeQueryAndReturnResult(query);
 																	
-						insert = String.format("update product set numberOfUnits = %s where productName = %s and storeID = %s", (Integer.toString(Integer.parseInt(num[0][0]) + Integer.parseInt(count)), product, storeid);
+						insert = String.format("update product set numberOfUnits = %s where productName = %s and storeID = %s", (Integer.toString(Integer.parseInt(num.get(0).get(0)) + Integer.parseInt(count)), product, storeid);
 						
 						System.out.println("Request processed successfully!!");
 					}
