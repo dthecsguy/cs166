@@ -609,7 +609,68 @@ public static void viewPopularCustomers(Retail esql) {
 	}
 }
 	
-public static void placeProductSupplyRequests(Retail esql) {}
+public static void placeProductSupplyRequests(Retail esql) {
+	try{
+		if (esql.authorisedUser.get(5).replaceAll("\\s", "").equals("manager")){
+			System.out.println("You are placing a product supply request...");
+			
+			System.out.print("StoreID to supply: ");
+			String storeid = in.readLine();
+			
+			if (mStores.contains(storeid)){
+				System.out.print("Product to supply: ");
+				String product = in.readLine();
+
+				System.out.print("How many to supply: ");
+				Strng count = in.readLine();
+				
+				String query = String.format("select * from product where productName = %s and storeID = %s", product, storeid);
+				
+				if (esql.executeQuery(query) > 0){
+					System.out.print("Enter the warehouse ID: ");
+					String wh = in.readLine();
+					
+					query = String.format("select * from warehouse where warehouseID = %s", wh);
+					
+					if(esql.executeQuery(query) > 0){
+						String insert = String.format("insert into ProductSupplyRequests (managerID, warehouseID, storeID, productName, unitsRequested) " + 
+																	"values (%s, %s, %s, %s, %s)", esql.authorisedUser.get(0).trim(), wh, storeid, product, count);
+																	
+						esql.executeUpdate(insert);
+						
+						Timestamp ts = new Timestamp(System.currentTimeMillis());
+						
+						insert = String.format("insert into ProductUpdates (managerID, storeID, productName, updatedOn) " + 
+																	"values (%s, %s, %s, %s)", esql.authorisedUser.get(0).trim(), storeid, product, ts.toString());
+																	
+						query = String.format("select numberOfUnits from product where productName = %s and storeid = %s", product, storeid);
+						List<List<String>> num = esql.executeQueryAndReturnResult(query);
+																	
+						insert = String.format("update product set numberOfUnits = %s where productName = %s and storeID = %s", (Integer.toString(Integer.parseInt(num[0][0]) + Integer.parseInt(count)), product, storeid);
+						
+						System.out.println("Request processed successfully!!");
+					}
+					else{
+						System.out.println("Warehouse doesn't exist.");
+					}
+					
+					
+				}
+				else{
+					System.out.println("Invalid Order. Check the product name.");
+				}
+			}
+			else{
+				System.out.println("Permission Denied!!!");
+			}
+			
+		}
+		else{System.out.println("Permission Denied!!!");}
+	}
+	catch(Exception e){
+		System.err.println(e.getMessage());
+	}
+}
 	
 public static void userInfo(Retail esql) {
    	System.out.printf("User Info: %s, %s\n", esql.authorisedUser.get(1), esql.authorisedUser.get(5));
