@@ -464,7 +464,7 @@ public class Retail {
 	
    public static void viewProducts(Retail esql) {
    	try{
-		if(esql.authorisedUser.get(5).replaceAll("\\s", "").equals("manager")){
+		if(esql.authorisedUser.get(5).replaceAll("\\s", "").equals("manager") || esql.authorisedUser.get(5).replaceAll("\\s", "").equals("admin")){
 			String query = String.format("select storeID from store where storeid in (select storeid from store where managerID = %s)", esql.authorisedUser.get(0));	
 			System.out.println("----------Store ID Of Store You Manage--------");
 			List<List<String>> res = esql.executeQueryAndReturnResult(query);
@@ -549,7 +549,7 @@ public static void placeOrder(Retail esql) {
 
 public static void viewRecentOrders(Retail esql) {
     try{
-		if (esql.authorisedUser.get(5).replaceAll("\\s", "").equals("admin") || esql.authorisedUser.get(5).replaceAll("\\s", "").equals("admin")){
+		if (esql.authorisedUser.get(5).replaceAll("\\s", "").equals("admin")){
 			String query = String.format("SELECT orderNumber, orderTime FROM Orders WHERE customerID = %s order by orderNumber desc limit 5", esql.authorisedUser.get(0));
 			int res = esql.executeQueryAndPrintResult(query);
 		}
