@@ -45,7 +45,7 @@ public class Retail {
 	//THE USER VARIABLE***********************************************************
 	private List<String> authorisedUser = null;
 	private List<String> mStores = null;
-
+	private List<Integer> sID = null;
    /**
     * Creates a new instance of Retail shop
     *
@@ -270,7 +270,7 @@ public class Retail {
             System.out.println("9. < EXIT");
             switch (readChoice()){
                case 1: CreateUser(esql); break;
-               case 2: esql.authorisedUser = LogIn(esql); System.out.println(esql.authorisedUser.get(0)); break;
+               case 2: esql.authorisedUser = LogIn(esql); /*System.out.println(esql.authorisedUser.get(0));*/ break;
                case 9: keepon = false; 
 		esql.authorisedUser = null;
 		break;
@@ -402,7 +402,12 @@ public class Retail {
 
 		 if (user.size() > 0){
 			 
-			if (!(user.get(0).get(5).replaceAll("\\s", "") == "manager")){
+			if (user.get(0).get(5).replaceAll("\\s", "").equals("customer")){
+				
+				System.out.println("Welcome Customer!!");
+				
+			}
+			if (user.get(0).get(5).replaceAll("\\s", "").equals("manager")){
 				
 				System.out.println("you are a manager!!");
 				
@@ -414,7 +419,17 @@ public class Retail {
 				for(List<String> x : res){
 					esql.mStores.add(x.get(0));
 				}
-
+			}
+			if (user.get(0).get(5).replaceAll("\\s", "").equals("admin")){	
+				System.out.println("you are an Admin!!");
+				query = String.format("select storeID from store");	
+				List<List<String>> res = esql.executeQueryAndReturnResult(query);
+				
+				esql.mStores = new ArrayList<String>();
+				
+				for(List<String> x : res){
+					esql.mStores.add(x.get(0));
+				}
 			}
 			return user.get(0);
 		 }
@@ -431,19 +446,17 @@ public class Retail {
 	try{
    	    System.out.print("\tFinding the closest stores to you...\n \n");
 		
-		int cnt = 0;
-		
 		String query = String.format("SELECT * FROM Store");
 		List<List<String>> re = esql.executeQueryAndReturnResult(query);
-		
-		System.out.println("-------------------Results---------------------\n");
-		
-		for(List<String> store : re){
-			if( esql.calculateDistance(Double.parseDouble(esql.authorisedUser.get(3)), Double.parseDouble(esql.authorisedUser.get(4)), Double.parseDouble(store.get(2)), Double.parseDouble(store.get(3))) <= 30 ){
-				System.out.println("Store ID: " + store.get(0) + " Store Name: " + store.get(1));
-			}
-		}
-	 	   
+		esql.sID = new ArrayList<Integer>();
+			System.out.println("-------------------Store Near You---------------------\n");
+			for(List<String> store : re){
+				if( esql.calculateDistance(Double.parseDouble(esql.authorisedUser.get(3)), Double.parseDouble(esql.authorisedUser.get(4)), Double.parseDouble(store.get(2)), Double.parseDouble(store.get(3))) <= 30 ){
+					esql.sID.add(Integer.parseInt(store.get(0)));
+					//System.out.println(esql.sID.get(0));
+					System.out.println("Store ID: " + store.get(0) + " Store Name: " + store.get(1));
+				}
+			}  
 	}catch(Exception e){
 		System.err.println(e.getMessage());
 	}
@@ -451,12 +464,30 @@ public class Retail {
 	
    public static void viewProducts(Retail esql) {
    	try{
-		System.out.print("Enter your desired Store ID: ");
-		String storeID = in.readLine();
+		if(esql.authorisedUser.get(5).replaceAll("\\s", "").equals("manager")){
+			String query = String.format("select storeID from store where storeid in (select storeid from store where managerID = %s)", esql.authorisedUser.get(0));	
+			System.out.println("----------Store ID Of Store You Manage--------");
+			List<List<String>> res = esql.executeQueryAndReturnResult(query);
+			for(List<String> store : res){
+				System.out.println("Store ID: " + store.get(0));	
+			}
+		}
+		if(esql.authorisedUser.get(5).replaceAll("\\s", "").equals("customer")){
+			String query = String.format("SELECT * FROM Store");	
+			System.out.println("----------Store ID Of Store Around You--------");
+			List<List<String>> res = esql.executeQueryAndReturnResult(query);
+			for(List<String> store : res){
+				if( esql.calculateDistance(Double.parseDouble(esql.authorisedUser.get(3)), Double.parseDouble(esql.authorisedUser.get(4)), Double.parseDouble(store.get(2)), Double.parseDouble(store.get(3))) <= 30 ){
+					System.out.println("Store ID: " + store.get(0));
+				}
+			}
+		}
+
+			System.out.print("Enter your desired Store ID: ");
+			String storeID = in.readLine();
 		
-		String query = String.format("SELECT * FROM Product WHERE storeID = %s", storeID);
-		int re = esql.executeQueryAndPrintResult(query);
-	
+			String query = String.format("SELECT * FROM Product WHERE storeID = %s", storeID);
+			int re = esql.executeQueryAndPrintResult(query);
 	}catch(Exception e){
 		System.err.println(e.getMessage());
 	}
@@ -464,9 +495,28 @@ public class Retail {
 
 public static void placeOrder(Retail esql) {
 	try{
-		System.out.print("Enter the desired Store ID: ");
-		String id = in.readLine();
+		boolean a = true;
+		String id ="";
+		while(a){
+			System.out.print("Enter the desired Store ID around your area: ");
+			id = in.readLine();
+			
+			if(esql.sID.contains(Integer.parseInt(id)) || esql.authorisedUser.get(5).replaceAll("\\s", "").equals("admin") || esql.authorisedUser.get(5).replaceAll("\\s", "").equals("manager")){ //let user and manager order from anystore they want
+				a = false;
+				String query = String.format("SELECT * FROM Product WHERE storeID = %s", id);
+				int re = esql.executeQueryAndPrintResult(query);
+			}else{
+				System.out.println("The store that you selected is not around you area please pick one from around your area");
+				String query = String.format("SELECT * FROM Store");
+				List<List<String>> re = esql.executeQueryAndReturnResult(query);
 		
+				for(List<String> store : re){
+					if( esql.calculateDistance(Double.parseDouble(esql.authorisedUser.get(3)), Double.parseDouble(esql.authorisedUser.get(4)), Double.parseDouble(store.get(2)), Double.parseDouble(store.get(3))) <= 30 ){
+					System.out.println("Store ID: " + store.get(0) + " Store Name: " + store.get(1));
+					}
+				}
+			}
+		}
 		System.out.print("Enter the product name exactly: ");
 		String product = in.readLine();
 		
@@ -481,11 +531,10 @@ public static void placeOrder(Retail esql) {
 			query = String.format("INSERT INTO Orders (customerID, storeID, productName, unitsOrdered, orderTime) VALUES ('%s', '%s', '%s', '%s', '%s')", esql.authorisedUser.get(0), id, product, unitno, ts.toString());
 			esql.executeUpdate(query);
 			
-			query = String.format("update product set numberOfUnits = %d where productName = %s and storeid = %s", Integer.parseInt(re.get(0).get(2)) - Integer.parseInt(unitno), product, id);
+			//System.out.println(product);
 			
-			String insert = String.format("insert into ProductUpdates (managerID, storeID, productName, updatedOn) " + 
-																	"values (%s, %s, %s, %s)", esql.authorisedUser.get(0).trim(), id, product, ts.toString());
-			executeUpdate(insert);
+			query = String.format("UPDATE product set numberOfUnits = %d where storeID = %d and productName = '%s'", Integer.parseInt(re.get(0).get(2)) - Integer.parseInt(unitno), Integer.parseInt(id), product);
+			esql.executeUpdate(query);
 			
 			System.out.println("Order succefully processed!");
 		}
@@ -500,12 +549,13 @@ public static void placeOrder(Retail esql) {
 
 public static void viewRecentOrders(Retail esql) {
     try{
-		if (!(esql.authorisedUser.get(5).replaceAll("\\s", "") == "customer")){
-			String query = String.format("SELECT orderNumber, orderTime FROM Orders WHERE customerID = %s order by orderTime, orderNumber desc limit 5", esql.authorisedUser.get(0));
+		if (esql.authorisedUser.get(5).replaceAll("\\s", "").equals("admin") || esql.authorisedUser.get(5).replaceAll("\\s", "").equals("admin")){
+			String query = String.format("SELECT orderNumber, orderTime FROM Orders WHERE customerID = %s order by orderNumber desc limit 5", esql.authorisedUser.get(0));
 			int res = esql.executeQueryAndPrintResult(query);
 		}
-		else if(!(esql.authorisedUser.get(5).replaceAll("\\s", "") == "manager")){
-			String query = String.format("SELECT * from orders where storeid in (select storeid from store where managerUserID = %s)", esql.authorisedUser.get(0));
+		else if(esql.authorisedUser.get(5).replaceAll("\\s", "").equals("manager")){
+			System.out.println("------------5 Most Recent Order--------------");
+			String query = String.format("SELECT * from orders where storeid in (select storeid from store where managerID = %s)", esql.authorisedUser.get(0));
 			int res = esql.executeQueryAndPrintResult(query);
 		}
 		else{
@@ -519,39 +569,46 @@ public static void viewRecentOrders(Retail esql) {
 	
 public static void updateProduct(Retail esql) {
 	try{
-		if (!(esql.authorisedUser.get(5) == "manager")){
+		if (esql.authorisedUser.get(5).replaceAll("\\s", "").equals("manager") || esql.authorisedUser.get(5).replaceAll("\\s", "").equals("admin")){ //let both admin and manager access
 			System.out.print("Enter the desired Store ID: ");
 			String id = in.readLine();
 			
-			if (esql.mStores.contains(id)){
+			if (esql.mStores.contains(id) || esql.authorisedUser.get(5).replaceAll("\\s", "").equals("admin")){ //let admin bypass store id
 				System.out.print("Enter the product you desire exactly: ");
 				String product = in.readLine();
-				
+				String insert;
 				String query = String.format("select productName from product where storeID = %s", id);
 				int res = esql.executeQuery(query);
 				
 				if(res > 1){
 					System.out.print("What would you like to change?\n" + 
 									"1.) Price\n2.) Inventory\n");
-					
-					Timestamp ts = new Timestamp(System.currentTimeMillis()); 
-					
-					switch(readChoice()){	
+					Timestamp ts = new Timestamp(System.currentTimeMillis());
+							
+					switch(readChoice()){
 						case 1: System.out.print("Enter new price: ");
 								String price = in.readLine();
 								
-								query = String.format("update product set pricePerUnit = %s where storeid = %s and productName = %s", price, id, product);
+								query = String.format("update product set pricePerUnit = '%s' where storeid = '%s' and productName = '%s'", price, id, product);
 								esql.executeUpdate(query);
 								
+								insert = String.format("insert into ProductUpdates (managerID, storeID, productName, updatedOn) " + 
+																	"values ('%s', '%s', '%s', '%s')", esql.authorisedUser.get(0).replaceAll("\\s", ""), id, product, ts.toString());
+								//System.out.println(insert);
+								esql.executeUpdate(insert);
 								System.out.println("Price changed successfully!!");
 								break;
 								
 						case 2: System.out.print("Enter new number of units: ");
 								String units = in.readLine();
 								
-								query = String.format("update product set numberOfUnits = %s where storeid = %s and productName = %s", units, id, product);
+								query = String.format("update product set numberOfUnits = %s where storeid = %s and productName = '%s'", units, id, product);
 								esql.executeUpdate(query);
 								
+								insert = String.format("insert into ProductUpdates (managerID, storeID, productName, updatedOn) " + 
+																	"values ('%s', '%s', '%s', '%s')", esql.authorisedUser.get(0).replaceAll("\\s", ""), id, product, ts.toString());
+								esql.executeUpdate(insert);
+					
 								System.out.println("Inventory changed successfully!!");
 								break;
 								
@@ -560,9 +617,6 @@ public static void updateProduct(Retail esql) {
 								break;
 					}
 					
-					String insert = String.format("insert into ProductUpdates (managerID, storeID, productName, updatedOn) " + 
-																	"values (%s, %s, %s, %s)", esql.authorisedUser.get(0).trim(), id, product, ts.toString());
-					executeUpdate(insert);
 				}
 				else{
 					System.out.print("Product not available at this store!!");
@@ -570,22 +624,25 @@ public static void updateProduct(Retail esql) {
 				
 			}
 			else{
-				System.out.print("Permission Denied!!");
+				System.out.println("Permission Denied!!");
 			}
 		}
 		else{
-			System.out.print("Permission Denied!!");
+			System.out.println("Permission Denied!!");
 		}
 	}
 	catch(Exception e){
 		System.err.println(e.getMessage());
 	}
 }
-
 public static void viewRecentUpdates(Retail esql) {
-   try{
-	if (esql.authorisedUser.get(5).trim().equals("manager")){
+	try{
+	if (esql.authorisedUser.get(5).replaceAll("\\s", "").equals("admin")){
 		String query = String.format("SELECT * FROM productupdates order by updateNumber desc limit 5");
+		int res = esql.executeQueryAndPrintResult(query);
+	}
+	else if(esql.authorisedUser.get(5).trim().equals("manager")){
+		String query = String.format("SELECT * FROM productupdates Where orders.storeID in (Select storeid from store where managerID = '%s') order by updateNumber desc limit 5",esql.authorisedUser.get(0));
 		int res = esql.executeQueryAndPrintResult(query);
 	}
 	else{
@@ -599,11 +656,13 @@ public static void viewRecentUpdates(Retail esql) {
 	
 public static void viewPopularProducts(Retail esql) {
    try{
-	if (!(esql.authorisedUser.get(5) == "manager")){
-		String query = String.format("select product.productName, product.storeID, count(orders.orderNumber) as numOrders from product" + 
-						" inner join orders on product.productName = orders.productName" +
-					    	" having product.storeID in (select storeid from store where managerID = %s)" +
-						" group by product.productName, product.storeID, numOrders order by numOrders desc limit 5", esql.authorisedUser.get(0));
+	if (esql.authorisedUser.get(5).replaceAll("\\s", "").equals("manager") ){
+		System.out.println("------------5 Most Popular Product For Manager--------------");
+		String query = String.format("Select productName From (Select productName, sum(unitsOrdered) From Orders Where Orders.storeID in (Select storeid from store where managerID = '%s') group by productName order by sum(unitsOrdered) desc LIMIT 5) a", esql.authorisedUser.get(0));
+		int re = esql.executeQueryAndPrintResult(query);
+	}else if(esql.authorisedUser.get(5).replaceAll("\\s", "").equals("admin")){
+		System.out.println("------------Top 5 Most Popular Product For All Store--------------");
+		String query = String.format("Select productName From (Select productName, sum(unitsOrdered) From Orders group by productName order by sum(unitsOrdered) desc LIMIT 5) a", esql.authorisedUser.get(0));
 		int re = esql.executeQueryAndPrintResult(query);
 	}
 	else{
@@ -617,11 +676,12 @@ public static void viewPopularProducts(Retail esql) {
 	
 public static void viewPopularCustomers(Retail esql) {
 	try{
-		if (!(esql.authorisedUser.get(5) == "manager")){
-			String query = String.format("select users.userID, users.name, count(orders.orderNumber) as numOrders from users" + 
-										" inner join orders on users.userID = orders.customerID" + 
-						    				" having product.storeID in (select store.storeid from store where store.managerID = %s)" +
-										" group by users.name, users.userID, numOrders order by numOrders desc limit 5", esql.authorisedUser.get(0));
+		if (esql.authorisedUser.get(5).replaceAll("\\s", "").equals("manager")){ //allowed admin
+			//Select name From users Where users.userID in
+			String query = String.format("Select name From Users Where userID in (Select customerID From Orders Where Orders.storeID in (Select storeid from store where managerID = '%s') group by customerID order by count(customerID) desc limit 5)", esql.authorisedUser.get(0));
+			int re = esql.executeQueryAndPrintResult(query);
+		}else if(esql.authorisedUser.get(5).replaceAll("\\s", "").equals("admin")){
+			String query = String.format("Select name From Users Where userID in (Select customerID From Orders group by customerID order by count(customerID) desc limit 5)");
 			int re = esql.executeQueryAndPrintResult(query);
 		}
 		else{
@@ -634,51 +694,51 @@ public static void viewPopularCustomers(Retail esql) {
 }
 	
 public static void placeProductSupplyRequests(Retail esql) {
-	try{
-		if (esql.authorisedUser.get(5).replaceAll("\\s", "").equals("manager")){
+		try{
+		if (esql.authorisedUser.get(5).replaceAll("\\s", "").equals("manager") || esql.authorisedUser.get(5).replaceAll("\\s", "").equals("admin")){
 			System.out.println("You are placing a product supply request...");
-			
+
 			System.out.print("StoreID to supply: ");
 			String storeid = in.readLine();
-			
-			if (mStores.contains(storeid)){
+
+			if (esql.mStores.contains(storeid)|| esql.authorisedUser.get(5).replaceAll("\\s", "").equals("admin")){
 				System.out.print("Product to supply: ");
 				String product = in.readLine();
 
 				System.out.print("How many to supply: ");
-				Strng count = in.readLine();
-				
-				String query = String.format("select * from product where productName = %s and storeID = %s", product, storeid);
-				
+				String count = in.readLine();
+
+				String query = String.format("select * from product where productName = '%s' and storeID = %s", product, storeid);
+
 				if (esql.executeQuery(query) > 0){
 					System.out.print("Enter the warehouse ID: ");
 					String wh = in.readLine();
-					
+
 					query = String.format("select * from warehouse where warehouseID = %s", wh);
-					
+
 					if(esql.executeQuery(query) > 0){
 						String insert = String.format("insert into ProductSupplyRequests (managerID, warehouseID, storeID, productName, unitsRequested) " + 
-																	"values (%s, %s, %s, %s, %s)", esql.authorisedUser.get(0).trim(), wh, storeid, product, count);
-																	
+																	"values (%s, %s, %s, '%s', %s)", esql.authorisedUser.get(0).trim(), wh, storeid, product, count);
+
 						esql.executeUpdate(insert);
-						
+
 						Timestamp ts = new Timestamp(System.currentTimeMillis());
-						
+
 						insert = String.format("insert into ProductUpdates (managerID, storeID, productName, updatedOn) " + 
-																	"values (%s, %s, %s, %s)", esql.authorisedUser.get(0).trim(), storeid, product, ts.toString());
-																	
-						query = String.format("select numberOfUnits from product where productName = %s and storeid = %s", product, storeid);
+																	"values (%s, %s, '%s', '%s')", esql.authorisedUser.get(0).trim(), storeid, product, ts.toString());
+						esql.executeUpdate(insert);
+						query = String.format("select numberOfUnits from product where productName = '%s' and storeid = %s", product, storeid);
 						List<List<String>> num = esql.executeQueryAndReturnResult(query);
-																	
-						insert = String.format("update product set numberOfUnits = %s where productName = %s and storeID = %s", (Integer.toString(Integer.parseInt(num.get(0).get(0)) + Integer.parseInt(count)), product, storeid);
-						
+
+						insert = String.format("update product set numberOfUnits = '%s' where productName = '%s' and storeID = '%s'", Integer.parseInt(num.get(0).get(0)) + Integer.parseInt(count), product, storeid);
+						esql.executeUpdate(insert);
 						System.out.println("Request processed successfully!!");
 					}
 					else{
 						System.out.println("Warehouse doesn't exist.");
 					}
-					
-					
+
+
 				}
 				else{
 					System.out.println("Invalid Order. Check the product name.");
@@ -687,7 +747,7 @@ public static void placeProductSupplyRequests(Retail esql) {
 			else{
 				System.out.println("Permission Denied!!!");
 			}
-			
+
 		}
 		else{System.out.println("Permission Denied!!!");}
 	}
@@ -697,7 +757,7 @@ public static void placeProductSupplyRequests(Retail esql) {
 }
 	
 public static void userInfo(Retail esql) {
-   	System.out.printf("User Info: %s, %s\n", esql.authorisedUser.get(1), esql.authorisedUser.get(5));
+   	System.out.printf("User Info: %s, %s\n", esql.authorisedUser.get(1), esql.authorisedUser.get(2));
 }
 
 }//end Retail
